@@ -41,7 +41,7 @@ public class CourseController {
 
     // path to List all courses
     @GetMapping(path="/list")
-    public @ResponseBody Iterable<Course> getAllStudents() {
+    public @ResponseBody Iterable<Course> getAllCourses() {
         // This returns a JSON or XML with the users
         return courseRepository.findAll();
     }
@@ -51,5 +51,30 @@ public class CourseController {
     public @ResponseBody Course getCourse(@PathVariable Integer id) {
         // This returns a JSON or XML with the users
         return courseRepository.findCourseByCourseId(id);
+    }
+
+    @PutMapping(path="/modify",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Course modifyCourse(@RequestBody Course modifiedCourse){
+        Course course = courseRepository.findCourseByCourseId(modifiedCourse.getCourseId());
+
+        course.setCourseName(modifiedCourse.getCourseName());
+        course.setCourseNumber(modifiedCourse.getCourseNumber());
+        course.setCapacity(modifiedCourse.getCapacity());
+        course.setYear(modifiedCourse.getYear());
+        course.setSemester(modifiedCourse.getSemester());
+        course.setPid(modifiedCourse.getPid());
+
+        final Course updatedCourse = courseRepository.save(course);
+
+        return updatedCourse;
+    }
+
+    @DeleteMapping(path="/delete")
+    public @ResponseBody String deleteCourse(@RequestBody Course courseToDelete){
+        Course course = courseRepository.findCourseByCourseId(courseToDelete.getCourseId());
+        courseRepository.delete(course);
+        return course.getCourseNumber() + ": " + course.getCourseName() + " has been deleted!";
     }
 }

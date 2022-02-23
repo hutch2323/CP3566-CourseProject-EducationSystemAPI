@@ -50,9 +50,34 @@ public class StudentController {
 
     // path to View one student based on ID
     @GetMapping(path="/view/{id}")
-    public @ResponseBody
-    Student getStudent(@PathVariable Integer id) {
+    public @ResponseBody Student getStudent(@PathVariable Integer id) {
         // This returns a JSON or XML with the users
         return studentRepository.findStudentByStudentId(id);
+    }
+
+    @PutMapping(path="/modify",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Student modifyStudent(@RequestBody Student modifiedStudent){
+        Student student = studentRepository.findStudentByStudentId(modifiedStudent.getStudentId());
+
+        student.setFirstName(modifiedStudent.getFirstName());
+        student.setLastName(modifiedStudent.getLastName());
+        student.setEmail(modifiedStudent.getEmail());
+        student.setAddress(modifiedStudent.getAddress());
+        student.setCity(modifiedStudent.getCity());
+        student.setPostal(modifiedStudent.getPostal());
+        student.setPhone(modifiedStudent.getPhone());
+
+        final Student updatedStudent = studentRepository.save(student);
+
+        return updatedStudent;
+    }
+
+    @DeleteMapping(path="/delete")
+    public @ResponseBody String deleteStudent(@RequestBody Student studentToDelete){
+        Student student = studentRepository.findStudentByStudentId(studentToDelete.getStudentId());
+        studentRepository.delete(student);
+        return studentToDelete.getFirstName() + " " + studentToDelete.getLastName() + " has been deleted!";
     }
 }
