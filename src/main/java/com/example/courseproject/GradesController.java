@@ -42,16 +42,16 @@ public class GradesController {
 //        return gradesRepository.findAll();
 //    }
 
-    @GetMapping(path="/list")
+    @GetMapping(path="/list/course")
     public @ResponseBody Iterable<Grades> getAllGradesForCourse(@RequestParam Integer courseId) {
         // This returns a JSON or XML with the enrollment info for a course
-        return gradesRepository.findAllByCourseId(courseId);
+        return gradesRepository.getGradesByCourseId(courseId);
     }
 
-    @GetMapping(path="/list")
+    @GetMapping(path="/list/student")
     public @ResponseBody Iterable<Grades> getAllGradesForStudent(@RequestParam Integer studentId) {
         // This returns a JSON or XML with the enrollment info for a student
-        return gradesRepository.findAllByStudentId(studentId);
+        return gradesRepository.getGradesByStudentId(studentId);
     }
 
     // path to View one course based on ID

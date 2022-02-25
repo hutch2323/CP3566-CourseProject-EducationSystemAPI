@@ -5,6 +5,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller // This means that this class is a Controller
 @RequestMapping(path="/enrollment") // This means URL's start with /demo (after Application path)
 public class EnrollmentController {
@@ -40,16 +42,16 @@ public class EnrollmentController {
 //        return enrollmentRepository.findAllByCourseId(courseId);
 //    }
 
-    @GetMapping(path="/list")
+    @GetMapping(path="/list/course")
     public @ResponseBody Iterable<Enrollment> getAllEnrollmentsForCourse(@RequestParam Integer courseId) {
         // This returns a JSON or XML with the enrollment info for a course
-        return enrollmentRepository.findAllByCourseId(courseId);
+        return enrollmentRepository.getEnrollmentByCourseId(courseId);
     }
 
-    @GetMapping(path="/list")
+    @GetMapping(path="/list/student")
     public @ResponseBody Iterable<Enrollment> getAllEnrollmentsForStudent(@RequestParam Integer studentId) {
         // This returns a JSON or XML with the enrollment info for a student
-        return enrollmentRepository.findAllByStudentId(studentId);
+        return enrollmentRepository.getEnrollmentByStudentId(studentId);
     }
 
     // path to View one course based on ID
