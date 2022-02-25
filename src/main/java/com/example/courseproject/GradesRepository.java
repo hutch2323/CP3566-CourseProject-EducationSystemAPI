@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface GradesRepository extends CrudRepository<Grades, Integer> {
     Grades findGradesByGid(Integer gid);
-    Iterable<Grades> findAllByCourseId(Integer courseId);
-    Iterable<Grades> findAllByStudentId(Integer studentId);
+    Iterable<Grades> getGradesByCourseId(Integer courseId);
+    Iterable<Grades> getGradesByStudentId(Integer studentId);
 }
