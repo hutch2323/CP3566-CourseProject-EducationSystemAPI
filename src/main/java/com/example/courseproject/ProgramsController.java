@@ -72,10 +72,20 @@ public class ProgramsController {
         Programs program = programsRepository.findProgramsByPid(pid);
         System.out.println("ProgramId: " + program.getPid());
         Iterable<Course> coursesToRemove = courseRepository.getCourseByPid(pid);
-        System.out.println(coursesToRemove);
+        System.out.println("Course ID: " + coursesToRemove);
 
         for (Course course : coursesToRemove){
             System.out.println(course.getCourseId());
+            Iterable<Enrollment> enrollmentsToRemove = enrollmentRepository.getEnrollmentByCourseId(course.getCourseId());
+            Iterable<Grades> gradesToRemove = gradesRepository.getGradesByCourseId(course.getCourseId());
+
+            for (Enrollment enrollment : enrollmentsToRemove){
+                System.out.println("Enrollment ID: " + enrollment.getEid());
+            }
+
+            for (Grades grade : gradesToRemove){
+                System.out.println("Grade ID: " + grade.getGid());
+            }
         }
 //        try {
 //            Course course = null;
