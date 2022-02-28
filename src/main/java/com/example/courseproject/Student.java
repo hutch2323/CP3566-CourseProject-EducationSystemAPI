@@ -8,8 +8,7 @@ import javax.persistence.Id;
 @Entity // This tells Hibernate to make a table out of this class
 public class Student {
     @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer studentId;
     private String firstName;
     private String lastName;

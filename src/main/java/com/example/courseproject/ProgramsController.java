@@ -81,52 +81,18 @@ public class ProgramsController {
 
             for (Enrollment enrollment : enrollmentsToRemove){
                 System.out.println("Enrollment ID: " + enrollment.getEid());
+                enrollmentRepository.delete(enrollment);
             }
 
             for (Grades grade : gradesToRemove){
                 System.out.println("Grade ID: " + grade.getGid());
+                gradesRepository.delete(grade);
             }
+
+            courseRepository.delete(course);
         }
-//        try {
-//            Course course = null;
-//            while ((course = coursesToRemove.iterator().next()) != null) {
-//
-//                System.out.println("CourseId: " + course.getCourseId());
-//            }
-//        } catch (Exception e) {
-//
-//        }
-//                    Iterable<Enrollment> enrollmentsToRemove = enrollmentRepository.getEnrollmentByCourseId(course.getCourseId());
-//                    try {
-//                        Enrollment enrollment = null;
-//                        while ((enrollment = enrollmentsToRemove.iterator().next()) != null) {
-//                            System.out.println("EnrollmentId: " + enrollment.getEid());
-//                            enrollmentRepository.delete(enrollment);
-//                        }
-//                    } catch (Exception e){
-//                        System.out.println(e);
-//                    }
-//
-//                    Iterable<Grades> gradesToRemove = gradesRepository.getGradesByCourseId(course.getCourseId());
-//
-//                    try {
-//                        while (gradesToRemove.iterator().hasNext()) {
-//                            Grades grade = gradesToRemove.iterator().next();
-//                            System.out.println("GradesId: " + grade.getGid());
-//                            gradesRepository.delete(grade);
-//                        }
-//                    } catch (Exception e){
-//                        System.out.println(e);
-//                    }
-//
-//                    courseRepository.delete(course);
 
-//            }
-//        } catch (Exception e){
-//            System.out.println(e);
-//        }
-
-//        programsRepository.delete(program);
-        return "success";
+        programsRepository.delete(program);
+        return "Program pid: " + pid + " has been successfully deleted.";
     }
 }

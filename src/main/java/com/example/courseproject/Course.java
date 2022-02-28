@@ -7,9 +7,11 @@ import javax.persistence.Id;
 
 @Entity // This tells Hibernate to make a table out of this class
 public class Course {
-    @Id
+
 //    @GeneratedValue(strategy = GenerationType.AUTO)
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+
     private Integer courseId;
     private String courseName;
     private String courseNumber;
