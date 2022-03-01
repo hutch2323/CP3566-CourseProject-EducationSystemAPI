@@ -5,6 +5,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller // This means that this class is a Controller
 @RequestMapping(path="/student") // This means URL's start with /demo (after Application path)
 public class StudentController {
@@ -81,9 +83,13 @@ public class StudentController {
     @DeleteMapping(path="/delete")
     public @ResponseBody String deleteStudent(@RequestParam Integer studentId){
         Student student = studentRepository.findStudentByStudentId(studentId);
+
+        if (student == null){
+            return "Student ID: " + studentId + " does not exist.";
+        }
         System.out.println(student.getStudentId());
-        Iterable<Enrollment> enrollmentsToRemove = enrollmentRepository.getEnrollmentByStudentId(studentId);
-        Iterable<Grades> gradesToRemove = gradesRepository.getGradesByStudentId(studentId);
+        List<Enrollment> enrollmentsToRemove = enrollmentRepository.getEnrollmentByStudentId(studentId);
+        List<Grades> gradesToRemove = gradesRepository.getGradesByStudentId(studentId);
 
         for (Enrollment enrollment : enrollmentsToRemove){
             System.out.println("Enrollment ID: " + enrollment.getEid());

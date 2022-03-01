@@ -5,6 +5,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller // This means that this class is a Controller
 @RequestMapping(path="/program") // This means URL's start with /demo (after Application path)
 public class ProgramsController {
@@ -70,14 +72,19 @@ public class ProgramsController {
     @DeleteMapping(path="/delete")
     public @ResponseBody String deleteProgram(@RequestParam Integer pid){
         Programs program = programsRepository.findProgramsByPid(pid);
+
+        if (program == null){
+            return "Program pid: " + pid + " does not exist.";
+        }
+
         System.out.println("ProgramId: " + program.getPid());
-        Iterable<Course> coursesToRemove = courseRepository.getCourseByPid(pid);
+        List<Course> coursesToRemove = courseRepository.getCourseByPid(pid);
         System.out.println("Course ID: " + coursesToRemove);
 
         for (Course course : coursesToRemove){
             System.out.println(course.getCourseId());
-            Iterable<Enrollment> enrollmentsToRemove = enrollmentRepository.getEnrollmentByCourseId(course.getCourseId());
-            Iterable<Grades> gradesToRemove = gradesRepository.getGradesByCourseId(course.getCourseId());
+            List<Enrollment> enrollmentsToRemove = enrollmentRepository.getEnrollmentByCourseId(course.getCourseId());
+            List<Grades> gradesToRemove = gradesRepository.getGradesByCourseId(course.getCourseId());
 
             for (Enrollment enrollment : enrollmentsToRemove){
                 System.out.println("Enrollment ID: " + enrollment.getEid());
