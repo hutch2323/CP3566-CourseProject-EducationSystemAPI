@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface EnrollmentRepository extends CrudRepository<Enrollment, Integer> {
     Enrollment findEnrollmentByEid(Integer eid);
-    Iterable<Enrollment> getEnrollmentByCourseId(Integer courseId);
-    Iterable<Enrollment> getEnrollmentByStudentId(Integer studentId);
+    List<Enrollment> getEnrollmentByCourseId(Integer courseId);
+    List<Enrollment> getEnrollmentByStudentId(Integer studentId);
 }
