@@ -18,8 +18,6 @@ public class CourseController {
     @Autowired
     private GradesRepository gradesRepository;
 
-
-
     // path to Add a particular course
     @PostMapping(path="/add") // Map ONLY POST Requests
     public @ResponseBody String addNewCourse (@RequestParam String courseName, @RequestParam String courseNumber,
@@ -35,7 +33,7 @@ public class CourseController {
         course.setSemester(semester);
         course.setPid(pid);
         courseRepository.save(course);
-        return "Saved";
+        return course.getCourseName() + "(" + course.getCourseNumber() + ") has been added.";
     }
 
     // alternate /add route to send in json object rather than path parameters
@@ -44,7 +42,7 @@ public class CourseController {
             produces = MediaType.APPLICATION_JSON_VALUE) // Map ONLY POST Requests
     public @ResponseBody String addNewCourseObject (@RequestBody Course newCourse){
         Course course = courseRepository.save(newCourse);
-        return "Saved";
+        return course.getCourseName() + " (" + course.getCourseNumber() + ") has been added.";
     }
 
     // path to List all courses
@@ -68,11 +66,16 @@ public class CourseController {
         return courseRepository.findCourseByCourseId(id);
     }
 
+    // path to Modify a course
     @PutMapping(path="/modify",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Course modifyCourse(@RequestBody Course modifiedCourse){
+    public @ResponseBody String modifyCourse(@RequestBody Course modifiedCourse){
         Course course = courseRepository.findCourseByCourseId(modifiedCourse.getCourseId());
+
+        if (course == null){
+            return "Course ID: " + modifiedCourse.getCourseId() + " does not exist.";
+        }
 
         course.setCourseName(modifiedCourse.getCourseName());
         course.setCourseNumber(modifiedCourse.getCourseNumber());
@@ -83,9 +86,10 @@ public class CourseController {
 
         final Course updatedCourse = courseRepository.save(course);
 
-        return updatedCourse;
+        return "Course ID: " + modifiedCourse.getCourseId() + " has been modified.";
     }
 
+    // path to delete a course
     @DeleteMapping(path="/delete")
     public @ResponseBody String deleteCourse(@RequestParam Integer courseId){
         Course course = courseRepository.findCourseByCourseId(courseId);
@@ -109,6 +113,6 @@ public class CourseController {
         }
 
         courseRepository.delete(course);
-        return course.getCourseNumber() + ": " + course.getCourseName() + " has been deleted!";
+        return course.getCourseNumber() + ": " + course.getCourseName() + " has been deleted.";
     }
 }

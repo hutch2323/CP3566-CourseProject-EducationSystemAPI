@@ -35,7 +35,7 @@ public class StudentController {
         student.setPostal(postal);
         student.setPhone(phone);
         studentRepository.save(student);
-        return "Saved";
+        return student.getFirstName() + " " + student.getLastName() + " has been added.";
     }
 
     // alternate /add route to send in json object rather than path parameters
@@ -44,7 +44,7 @@ public class StudentController {
                 produces = MediaType.APPLICATION_JSON_VALUE) // Map ONLY POST Requests
     public @ResponseBody String addNewStudentObject (@RequestBody Student newStudent){
         Student student = studentRepository.save(newStudent);
-        return "Saved";
+        return student.getFirstName() + " " + student.getLastName() + " has been added.";
     }
 
     // path to List all students
@@ -61,11 +61,16 @@ public class StudentController {
         return studentRepository.findStudentByStudentId(id);
     }
 
+    // path to modify a student record
     @PutMapping(path="/modify",
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Student modifyStudent(@RequestBody Student modifiedStudent){
+    public @ResponseBody String modifyStudent(@RequestBody Student modifiedStudent){
         Student student = studentRepository.findStudentByStudentId(modifiedStudent.getStudentId());
+
+        if (student == null){
+            return "Student ID: " + modifiedStudent.getStudentId() + " does not exist.";
+        }
 
         student.setFirstName(modifiedStudent.getFirstName());
         student.setLastName(modifiedStudent.getLastName());
@@ -77,9 +82,10 @@ public class StudentController {
 
         final Student updatedStudent = studentRepository.save(student);
 
-        return updatedStudent;
+        return "Student ID: " + updatedStudent.getStudentId() + " has been modified.";
     }
 
+    // path to Delete a student record
     @DeleteMapping(path="/delete")
     public @ResponseBody String deleteStudent(@RequestParam Integer studentId){
         Student student = studentRepository.findStudentByStudentId(studentId);
@@ -87,6 +93,7 @@ public class StudentController {
         if (student == null){
             return "Student ID: " + studentId + " does not exist.";
         }
+
         System.out.println(student.getStudentId());
         List<Enrollment> enrollmentsToRemove = enrollmentRepository.getEnrollmentByStudentId(studentId);
         List<Grades> gradesToRemove = gradesRepository.getGradesByStudentId(studentId);
