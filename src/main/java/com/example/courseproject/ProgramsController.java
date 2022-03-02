@@ -19,8 +19,7 @@ public class ProgramsController {
     @Autowired
     private GradesRepository gradesRepository;
 
-
-    // path to Add a particular course
+    // path to Add a particular program
     @PostMapping(path="/add") // Map ONLY POST Requests
     public @ResponseBody String addNewProgram (@RequestParam String programName, @RequestParam String campus){
         // @ResponseBody means the returned String is the response, not a view name
@@ -29,7 +28,8 @@ public class ProgramsController {
         program.setProgramName(programName);
         program.setCampus(campus);
         programsRepository.save(program);
-        return "Saved";
+
+        return program.getProgramName() + " has been added.";
     }
 
     // alternate /add route to send in json object rather than path parameters
@@ -38,37 +38,43 @@ public class ProgramsController {
             produces = MediaType.APPLICATION_JSON_VALUE) // Map ONLY POST Requests
     public @ResponseBody String addNewProgramsObject (@RequestBody Programs newProgram){
         Programs program = programsRepository.save(newProgram);
-        return "Saved";
+        return program.getProgramName() + " has been added.";
     }
 
-    // path to List all courses
+    // path to List all programs
     @GetMapping(path="/list")
     public @ResponseBody Iterable<Programs> getAllPrograms() {
         // This returns a JSON or XML with the users
         return programsRepository.findAll();
     }
 
-    // path to View one course based on ID
+    // path to View one program based on ID
     @GetMapping(path="/view/{id}")
     public @ResponseBody Programs getProgram(@PathVariable Integer id) {
         // This returns a JSON or XML with the users
         return programsRepository.findProgramsByPid(id);
     }
 
+    // path to Modify a program
     @PutMapping(path="/modify",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Programs modifyProgram(@RequestBody Programs modifiedProgram){
+    public @ResponseBody String modifyProgram(@RequestBody Programs modifiedProgram){
         Programs program = programsRepository.findProgramsByPid(modifiedProgram.getPid());
+
+        if (program == null){
+            return "Program pid: " + modifiedProgram.getPid() + " does not exist.";
+        }
 
         program.setProgramName(modifiedProgram.getProgramName());
         program.setCampus(modifiedProgram.getCampus());
 
         final Programs updatedProgram = programsRepository.save(program);
 
-        return updatedProgram;
+        return "Program pid: " + updatedProgram.getPid() + " has been modified.";
     }
 
+    // path to Delete a program
     @DeleteMapping(path="/delete")
     public @ResponseBody String deleteProgram(@RequestParam Integer pid){
         Programs program = programsRepository.findProgramsByPid(pid);
