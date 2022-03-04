@@ -17,6 +17,8 @@ public class CourseController {
     private EnrollmentRepository enrollmentRepository;
     @Autowired
     private GradesRepository gradesRepository;
+    @Autowired
+    private ProgramsRepository programsRepository;
 
     // path to Add a particular course
     @PostMapping(path="/add") // Map ONLY POST Requests
@@ -25,6 +27,12 @@ public class CourseController {
                                                @RequestParam String semester, @RequestParam Integer pid ){
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
+
+        Programs program = programsRepository.findProgramsByPid(pid);
+        if (program == null){
+            return "Program pid: " + pid + " does not exist.";
+        }
+
         Course course = new Course();
         course.setCourseName(courseName);
         course.setCourseNumber(courseNumber);
@@ -41,6 +49,11 @@ public class CourseController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE) // Map ONLY POST Requests
     public @ResponseBody String addNewCourseObject (@RequestBody Course newCourse){
+        Programs program = programsRepository.findProgramsByPid(newCourse.getPid());
+        if (program == null){
+            return "Program pid: " + newCourse.getPid() + " does not exist.";
+        }
+
         Course course = courseRepository.save(newCourse);
         return course.getCourseName() + " (" + course.getCourseNumber() + ") has been added.";
     }
@@ -72,9 +85,13 @@ public class CourseController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody String modifyCourse(@RequestBody Course modifiedCourse){
         Course course = courseRepository.findCourseByCourseId(modifiedCourse.getCourseId());
-
         if (course == null){
             return "Course ID: " + modifiedCourse.getCourseId() + " does not exist.";
+        }
+
+        Programs program = programsRepository.findProgramsByPid(modifiedCourse.getPid());
+        if (program == null){
+            return "Program pid: " + modifiedCourse.getPid() + " does not exist.";
         }
 
         course.setCourseName(modifiedCourse.getCourseName());
@@ -85,7 +102,6 @@ public class CourseController {
         course.setPid(modifiedCourse.getPid());
 
         final Course updatedCourse = courseRepository.save(course);
-
         return "Course ID: " + modifiedCourse.getCourseId() + " has been modified.";
     }
 
@@ -93,7 +109,6 @@ public class CourseController {
     @DeleteMapping(path="/delete")
     public @ResponseBody String deleteCourse(@RequestParam Integer courseId){
         Course course = courseRepository.findCourseByCourseId(courseId);
-
         if (course == null){
             return "Course ID: " + courseId + " does not exist.";
         }

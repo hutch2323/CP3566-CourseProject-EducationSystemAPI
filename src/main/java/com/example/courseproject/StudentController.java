@@ -67,7 +67,6 @@ public class StudentController {
                 produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody String modifyStudent(@RequestBody Student modifiedStudent){
         Student student = studentRepository.findStudentByStudentId(modifiedStudent.getStudentId());
-
         if (student == null){
             return "Student ID: " + modifiedStudent.getStudentId() + " does not exist.";
         }
@@ -89,7 +88,6 @@ public class StudentController {
     @DeleteMapping(path="/delete")
     public @ResponseBody String deleteStudent(@RequestParam Integer studentId){
         Student student = studentRepository.findStudentByStudentId(studentId);
-
         if (student == null){
             return "Student ID: " + studentId + " does not exist.";
         }
